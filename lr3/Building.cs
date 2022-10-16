@@ -4,11 +4,11 @@ namespace lr3
 {
     internal abstract class Building
     {
-        protected FlatType _flatType;
-        protected BuildingType _buildingType;
-        protected int _flatsCount;
-        protected double _square;
-        public readonly string _address;
+        private FlatType _flatType;
+        private BuildingType _buildingType;
+        private int _flatsCount;
+        private double _square;
+        private string _address;
 
         protected static readonly Dictionary<FlatType, int> _roomsCount = new Dictionary<FlatType, int>
         {
@@ -20,20 +20,20 @@ namespace lr3
         protected Building(BuildingType buildingType, FlatType type, int flatsCount, string address)
         {
             BuildingType = buildingType;
-            Type = type;
-            _flatsCount = flatsCount;
-            _address = address;
+            FlatType = type;
+            FlatsCount = flatsCount;
+            Address = address;
         }
 
-        protected Building(BuildingType buildingType, FlatType type, double square, string address)
+        protected Building(BuildingType buildingType, double square, string address)
         {
             BuildingType = buildingType;
-            Type = type;
-            _square = square;
-            _address = address;
+            FlatType = FlatType.None;
+            Square = square;
+            Address = address;
         }
 
-        public FlatType Type
+        public FlatType FlatType
         {
             get { return _flatType; }
             set { _flatType = value; }
@@ -43,6 +43,24 @@ namespace lr3
         {
             get { return _buildingType; }
             set { _buildingType = value; }
+        }
+
+        public int FlatsCount
+        {
+            get { return _flatsCount; }
+            set { _flatsCount = value; }
+        }
+
+        public string Address
+        {
+            get { return _address; }
+            set { _address = value; }
+        }
+
+        public double Square
+        {
+            get { return _square; }
+            set { _square = value; }
         }
 
         public abstract double Average { get; }

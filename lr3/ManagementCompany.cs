@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace lr3
 {
@@ -23,7 +24,7 @@ namespace lr3
 
         public void Add(Building building)
         {
-            if (building == null || building.Type == FlatType.None || string.IsNullOrEmpty(building._address))
+            if (building == null|| string.IsNullOrEmpty(building.Address))
             {
                 throw new Exception("Что-то не так...");
             }
@@ -32,12 +33,10 @@ namespace lr3
             Sort();
         }
 
-        /*
         public IEnumerable<Building> GetBuildings()
         {
             return _buildings;
         }
-        */
         
 
         public void GetBuildingsInformation()
@@ -45,7 +44,7 @@ namespace lr3
             foreach (Building building in _buildings)
             {
                 Console.WriteLine($"Тип строения: {building.BuildingType}");
-                Console.WriteLine($"Адрес строения: {building._address}");
+                Console.WriteLine($"Адрес строения: {building.Address}");
                 Console.WriteLine($"Количество жильцов/работников строения: {building.Average}");
                 Console.WriteLine();
             }
@@ -66,7 +65,7 @@ namespace lr3
             for (int i = 0; i < 2; i++)
             {
                 Console.WriteLine($"Тип строения: {_buildings[i].BuildingType}");
-                Console.WriteLine($"Адрес строения: {_buildings[i]._address}");
+                Console.WriteLine($"Адрес строения: {_buildings[i].Address}");
                 Console.WriteLine($"Количество жильцов/работников строения: {_buildings[i].Average}");
                 Console.WriteLine();
             }
@@ -81,9 +80,28 @@ namespace lr3
 
             for (int i = _buildings.Count - 3; i < _buildings.Count; i++)
             {
-                Console.WriteLine($"Адрес строения: {_buildings[i]._address}");
+                Console.WriteLine($"Адрес строения: {_buildings[i].Address}");
                 Console.WriteLine();
             }
+        }
+
+        public void ToJson(string fileName)
+        {
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(_buildings, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }));
+        }
+
+        public static ManagementCompany FromJson(string fileName)
+        {
+            ManagementCompany company = new ManagementCompany();
+
+            var buildings = JsonConvert.DeserializeObject<List<Building>>(File.ReadAllText(fileName), new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            if (buildings != null)
+            {
+                company._buildings.AddRange(buildings);
+            }
+
+            return company;
         }
     }
 }

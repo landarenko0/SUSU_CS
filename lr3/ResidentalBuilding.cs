@@ -13,7 +13,7 @@ namespace lr3
 
         public override double Average
         {
-            get { return _roomsCount[_flatType] * _flatsCount * k; }
+            get { return _roomsCount[FlatType] * FlatsCount * k; }
         }
     }
 }

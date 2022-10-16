@@ -7,6 +7,6 @@ namespace lr3
         None,
         Elite,
         Business,
-        Economy
+        Economy,
     }
 }

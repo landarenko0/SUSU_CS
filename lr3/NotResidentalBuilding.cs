@@ -6,14 +6,14 @@ namespace lr3
     {
         private const double k = 0.2;
 
-        public NotResidentalBuilding(FlatType type, double square, string address) : base(BuildingType.NotResidental, type, square, address)
+        public NotResidentalBuilding(double square, string address) : base(BuildingType.NotResidental, square, address)
         {
 
         }
 
         public override double Average
         {
-            get { return _square * k; }
+            get { return Square * k; }
         }
     }
 }

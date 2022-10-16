@@ -21,7 +21,7 @@ namespace lr3
                 return x.BuildingType.CompareTo(y.BuildingType);
             }
 
-            return x._address.CompareTo(y._address);
+            return x.Address.CompareTo(y.Address);
         }
     }
 }
