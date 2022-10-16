@@ -192,7 +192,7 @@ namespace lr1
                                         isParsed = Double.TryParse(Console.ReadLine(), out _height);
                                     }
 
-                                    paral1.Resize(_length, _width, _height);
+                                    paral2.Resize(_length, _width, _height);
                                     Console.WriteLine();
                                     Console.WriteLine("Размеры параллелепипеда изменены! Новые размеры:");
                                     Console.WriteLine(paral2);
