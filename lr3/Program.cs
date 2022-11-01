@@ -8,31 +8,92 @@ namespace lr3
         
         public static void Main()
         {
-            ManagementCompany company = new ManagementCompany();
-
-            while (BuildingsCreating(company)) { }
-
             const string fileName = "MyMС.json";
-            Console.WriteLine(Path.GetExtension(fileName));
-            company.ToJson(fileName);
 
-            try
+            if (Path.GetExtension(fileName) == ".json")
             {
+                ManagementCompany company = new ManagementCompany();
+
+                while (BuildingsCreating(company)) { }
+
+                // Сереализация
+                company.ToJson(fileName);
+
+                // Десереализация
                 ManagementCompany myNewCompany = ManagementCompany.FromJson(fileName);
 
-                foreach (var building in myNewCompany.GetBuildings())
-                {
-                    Console.WriteLine($"Тип строения: {building.BuildingType}");
-                    Console.WriteLine($"Адрес строения: {building.Address}");
-                    Console.WriteLine($"Количество жильцов/работников строения: {building.Average}");
-                    Console.WriteLine();
-                }
+                List<Building> buildings = company.GetBuildings();
 
-                Console.WriteLine($"\nTotal count = {myNewCompany.TotalCount}");
+                bool isRunning = true;
+                while (isRunning)
+                {
+                    Start(company.BuildingsCount);
+
+                    string choise = Console.ReadLine();
+                    Console.WriteLine();
+
+                    switch (choise)
+                    {
+                        case "1":
+                            GetBuildingsInformation(buildings, company.TotalCount);
+                            Console.WriteLine();
+                            Console.WriteLine("Чтобы продолжить, нажмите клавишу Enter.");
+                            Console.ReadLine();
+                            break;
+
+                        case "2":
+                            if (buildings.Count < 2)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Функция недоступна. Количество зданий меньше 2-х.");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine();
+                                Console.WriteLine("Чтобы продолжить, нажмите клавишу Enter.");
+                                Console.ReadLine();
+                                break;
+                            }
+                            GetFirstTwoObjects(buildings);
+                            Console.WriteLine();
+                            Console.WriteLine("Чтобы продолжить, нажмите клавишу Enter.");
+                            Console.ReadLine();
+                            break;
+
+                        case "3":
+                            if (buildings.Count < 3)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Функция недоступна. Количество зданий меньше 3-х.");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine();
+                                Console.WriteLine("Чтобы продолжить, нажмите клавишу Enter.");
+                                Console.ReadLine();
+                                break;
+                            }
+                            GetLastThreeAddresses(buildings);
+                            Console.WriteLine();
+                            Console.WriteLine("Чтобы продолжить, нажмите клавишу Enter.");
+                            Console.ReadLine();
+                            break;
+
+                        case "exit":
+                            isRunning = false;
+                            Console.WriteLine("Работа программы завершена.");
+                            break;
+
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Неверный ввод данных. Попробуйте еще раз.");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine();
+                            Console.WriteLine("Чтобы продолжить, нажмите клавишу Enter.");
+                            Console.ReadLine();
+                            break;
+                    }
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Неверный формат файла.");
             }
         }
 
@@ -181,6 +242,76 @@ namespace lr3
             }
 
             return true;
+        }
+
+        static void Start(int count)
+        {
+            Console.Clear();
+            Console.WriteLine("Это начальное меню программы. Она обладает следующими возможностями:");
+            Console.WriteLine();
+            Console.WriteLine("1. Вывод информации (тип строения, адрес, среднее количество человек) обо всех зданиях;");
+            Console.Write("2. Вывод информации о первых 2-х зданиях; ");
+            if (count < 2)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Недоступно, так как количество зданий меньше 2.");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.WriteLine();
+            }
+            Console.Write("3. Вывод адресов 3-х последних зданий; ");
+            if (count < 3)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Недоступно, так как количество зданий меньше 3.");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Чтобы выбрать нужное действие, введите его номер.");
+            Console.WriteLine();
+            Console.WriteLine("Чтобы завершить работу программы, введите 'exit'.");
+            Console.WriteLine();
+            Console.Write("Ваш выбор: ");
+        }
+
+        static void GetBuildingsInformation(List<Building> buildings, double totalCount)
+        {
+            foreach (var building in buildings)
+            {
+                Console.WriteLine($"Тип строения: {building.BuildingType}");
+                Console.WriteLine($"Адрес строения: {building.Address}");
+                Console.WriteLine($"Количество жильцов/работников строения: {building.Average}");
+                Console.WriteLine();
+            }
+
+            Console.WriteLine($"\nОбщее количество человек = {totalCount}");
+        }
+
+        static void GetFirstTwoObjects(List<Building> buildings)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Console.WriteLine($"Тип строения: {buildings[i].BuildingType}");
+                Console.WriteLine($"Адрес строения: {buildings[i].Address}");
+                Console.WriteLine($"Количество жильцов/работников строения: {buildings[i].Average}");
+                Console.WriteLine();
+            }
+        }
+
+        static void GetLastThreeAddresses(List<Building> buildings)
+        {
+            for (int i = buildings.Count - 3; i < buildings.Count; i++)
+            {
+                Console.WriteLine($"Адрес строения: {buildings[i].Address}");
+                Console.WriteLine();
+            }
         }
     }
 }

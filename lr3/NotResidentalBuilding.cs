@@ -1,14 +1,17 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace lr3
 {
     internal class NotResidentalBuilding : Building
     {
         private const double k = 0.2;
+        public double Square { get; private set; }
 
-        public NotResidentalBuilding(double square, string address) : base(BuildingType.NotResidental, square, address)
+        [JsonConstructor]
+        public NotResidentalBuilding(double square, string address) : base(BuildingType.NotResidental, address)
         {
-
+            Square = square;
         }
 
         public override double Average

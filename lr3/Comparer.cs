@@ -8,7 +8,6 @@ namespace lr3
         {
             if (x.Average != y.Average) 
             {
-                //return x.Average.CompareTo(y.Average);
                 if (x.Average < y.Average)
                 {
                     return 1;
