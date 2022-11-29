@@ -13,15 +13,15 @@ namespace lr4
         public event Action<string, string, int, string> AddressFound;
         public event Action<string, string, int, string> PhoneNumberFound;
 
-        public Scan(int currentDepth, int currentCount, string url)
+        public Scan(int depth, int count, string url)
         {
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36 OPR/90.0.4480.84");
             client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
             client.DefaultRequestHeaders.Add("Accept-Language", "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7");
 
-            maxDepth = currentDepth;
-            maxCount = currentCount;
+            maxDepth = depth;
+            maxCount = count;
             this.url = url;
         }
 
@@ -48,6 +48,7 @@ namespace lr4
 
             var title = Regex.Matches(pageText, @"<title>(.*)</title>");
             string pageTitle = title.Count != 0 ? title[0].Groups[1].Value : "No title";
+            page._pageTitle = pageTitle;
 
             var addresses = Regex.Matches(pageText, @"title=""Карта"">(.*)<\/a>");
 
@@ -82,7 +83,7 @@ namespace lr4
 
             for (int i = 0; i < locals.Count; i++)
             {
-                pages.Enqueue(new CurrentPage(this.url + locals[i].Groups[1].Value, currentDepth + 1, pageTitle));
+                pages.Enqueue(new CurrentPage(this.url + locals[i].Groups[1].Value, currentDepth + 1, ""));
             }
 
             if (pages.Count == 0 || currentDepth > maxDepth || currentCount == maxCount)
@@ -102,7 +103,7 @@ namespace lr4
         {
             using (StreamWriter sw = new StreamWriter(name, false, Encoding.UTF8))
             {
-                sw.WriteLine("Ссылка;Название;Адреса;Номера телефонов;Уровень");
+                sw.WriteLine("Ссылка;Название;Адрес;Номер телефона;Уровень");
                 foreach (var p in GetPages().Where(p => p._addresses.Count >= 0).Where(p => p._phoneNumbers.Count >= 0))
                 {
                     if (p._addresses.Count == 0 && p._phoneNumbers.Count > 0)
