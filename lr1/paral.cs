@@ -7,7 +7,7 @@ namespace lr1
         // _x0, _y0, _z0 - координаты вершины параллелепипеда
         private double _x0, _y0, _z0, _length, _width, _height;
 
-        public paral(double x0, double y0, double z0, double width, double length, double height)
+        public paral(double x0, double y0, double z0, double length, double width, double height)
         {
             if (length <= 0 || width <= 0 || height <= 0)
             {
@@ -216,7 +216,8 @@ namespace lr1
                 {
                     newLength = Math.Abs(y2 - y3);
 
-                    newWidth = Math.Abs(x2 - x3);
+                    //newWidth = Math.Abs(x2 - x3);
+                    newWidth = intersectionWidth(x1, x2, x3, x4, paral._width);
 
                     if (newWidth > _width)
                     {
@@ -229,7 +230,8 @@ namespace lr1
                 {
                     newLength = Math.Abs(y4 - y1);
 
-                    newWidth = Math.Abs(x4 - x1);
+                    //newWidth = Math.Abs(x4 - x1);
+                    newWidth = intersectionWidth(x1, x2, x3, x4, paral._width);
 
                     if (newWidth > _width)
                     {
@@ -242,7 +244,8 @@ namespace lr1
                 {
                     newLength = paral._length;
 
-                    newWidth = _width;
+                    //newWidth = paral._width;
+                    newWidth = intersectionWidth(x1, x2, x3, x4, paral._width);
 
                     newHeight = intersectionHeight(z1, z2, z3, z4, paral._height);
                 }
@@ -250,7 +253,8 @@ namespace lr1
                 {
                     newLength = _length;
 
-                    newWidth = paral._width;
+                    //newWidth = paral._width;
+                    newWidth = intersectionWidth(x1, x2, x3, x4, paral._width);
 
                     newHeight = intersectionHeight(z1, z2, z3, z4, paral._height);
                 }
@@ -363,6 +367,34 @@ namespace lr1
             }
 
             return newHeight;
+        }
+
+        private double intersectionWidth(double x1, double x2, double x3, double x4, double paral_width)
+        {
+            double newWidth;
+
+            if (x1 <= x3 && x2 <= x4)
+            {
+                newWidth = Math.Abs(x2 - x3);
+            }
+            else if (x1 >= x3 && x2 >= x4)
+            {
+                newWidth = Math.Abs(x4 - x1);
+            }
+            else if (x1 >= x3 && x2 <= x4)
+            {
+                newWidth = _height;
+            }
+            else if (x1 <= x3 && x2 >= x4)
+            {
+                newWidth = paral_width;
+            }
+            else
+            {
+                throw new Exception("Что-то не так");
+            }
+
+            return newWidth;
         }
     }
 }
